@@ -88,39 +88,43 @@ export default function SupplierSelect({
   };
 
   const fetchCategories = async () => {
-    try {
-      const response = await apiService.getCategories();
-      if (response.success && response.data && "data" in response) {
-        setCategories(response.data.categories || []);
-        // Set default category if none selected and categories are available
-        if (
-          !createFormData.category &&
-          response.data.categories &&
-          response.data.categories.length > 0
-        ) {
-          setCreateFormData((prev) => ({
-            ...prev,
-            category:
-              response.data.categories[0].name ||
-              response.data.categories[0]._id,
-          }));
-        }
+  try {
+    const response = await apiService.getCategories();
+
+    if (response.success && response.data && "data" in response) {
+      const categoriesData = response.data.categories || [];
+
+      setCategories(categoriesData);
+
+      if (!createFormData.category && categoriesData.length > 0) {
+        setCreateFormData((prev) => ({
+          ...prev,
+          category:
+            categoriesData[0]?.name ||
+            categoriesData[0]?._id ||
+            "",
+        }));
       }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      // Fallback to default categories if API fails
-      const fallbackCategories = [
-        { _id: "Electronics", name: "Electronics", count: 0 },
-        { _id: "Clothing", name: "Clothing", count: 0 },
-        { _id: "Home & Garden", name: "Home & Garden", count: 0 },
-        { _id: "Sports", name: "Sports", count: 0 },
-        { _id: "Books", name: "Books", count: 0 },
-        { _id: "Beauty", name: "Beauty", count: 0 },
-      ];
-      setCategories(fallbackCategories);
-      setCreateFormData((prev) => ({ ...prev, category: "Electronics" }));
     }
-  };
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+
+    const fallbackCategories = [
+      { _id: "Electronics", name: "Electronics", count: 0 },
+      { _id: "Clothing", name: "Clothing", count: 0 },
+      { _id: "Home & Garden", name: "Home & Garden", count: 0 },
+      { _id: "Sports", name: "Sports", count: 0 },
+      { _id: "Books", name: "Books", count: 0 },
+      { _id: "Beauty", name: "Beauty", count: 0 },
+    ];
+
+    setCategories(fallbackCategories);
+    setCreateFormData((prev) => ({
+      ...prev,
+      category: "Electronics",
+    }));
+  }
+};
 
   useEffect(() => {
     fetchSuppliers();
