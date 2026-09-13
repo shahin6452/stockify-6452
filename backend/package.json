@@ -41,7 +41,6 @@
     "pdf2pic": "^2.1.4",
     "pdfkit": "^0.17.2",
     "sharp": "^0.34.3",
-    "stockify": "file:..",
     "tesseract.js": "^6.0.1"
   }
 }
